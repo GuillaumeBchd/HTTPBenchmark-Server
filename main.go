@@ -14,12 +14,14 @@ func main() {
 
 	r := mux.NewRouter()
 
+	b, err := ioutil.ReadFile("1kb.bin")
+	if err != nil {
+		panic(err)
+	}
+
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		b, err := ioutil.ReadFile("1kb.bin")
-		if err != nil {
-			panic(err)
-		}
 		w.Write(b)
+		defer r.Body.Close()
 	}).Methods("GET")
 
 	srv := &http.Server{
